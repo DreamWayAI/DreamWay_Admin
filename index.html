@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DreamWay Admin</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  
+<div style="padding: 20px; background: #f3f3f3; margin-top: 30px;">
+  <h3>🧠 Генерація GPT</h3>
+  <textarea id="gptInput" rows="4" style="width:100%; margin-bottom:10px;"></textarea>
+  <button onclick="generateGPT()" style="padding: 10px 20px;">Згенерувати</button>
+  <pre id="gptOutput" style="margin-top:10px; background:#eaeaea; padding:10px;"></pre>
+</div>
+
+<script>
+async function generateGPT() {
+    const prompt = document.getElementById("gptInput").value;
+    const output = document.getElementById("gptOutput");
+    output.textContent = "Генерація...";
+
+    try {
+        const response = await fetch("https://api.openai.com/v1/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer sk-YOUR-API-KEY"
+            },
+            body: JSON.stringify({
+                model: "text-davinci-003",
+                prompt: prompt,
+                max_tokens: 100
+            })
+        });
+
+        const data = await response.json();
+        output.textContent = data.choices[0].text.trim();
+    } catch (error) {
+        output.textContent = "Помилка: " + error;
+    }
+}
+</script>
+
+</body>
+</html>
